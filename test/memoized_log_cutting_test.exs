@@ -15,5 +15,9 @@ defmodule MemoizedLogCuttingTest do
     test "returns the highest possible price when it requires multiple lengths" do
       assert MemoizedLogCutting.cut_log(@p, 5) == 13
     end
+
+    test "works when the log is longer than the highest length in the price list" do
+      assert MemoizedLogCutting.cut_log(@p, 10) == 26
+    end
   end
 end
