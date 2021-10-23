@@ -19,5 +19,10 @@ defmodule MemoizedLogCuttingTest do
     test "works when the log is longer than the highest length in the price list" do
       assert MemoizedLogCutting.cut_log(@p, 10) == 26
     end
+
+    test "returns the result for long logs in an acceptable amount of time" do
+      Task.async(fn -> MemoizedLogCutting.cut_log(@p, 50) end)
+      |> Task.await(:timer.seconds(6))
+    end
   end
 end
