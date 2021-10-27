@@ -1,19 +1,20 @@
 defmodule MemoizedLogCutting do
-  def cut_log(prices, length), do: do_cut_log(prices, length, %{})
+  def cut_log(prices, length) do
+    {value, _} = do_cut_log(prices, length, %{0 => 0})
+    value
+  end
 
-  defp do_cut_log(_prices, 0, _memo), do: 0
-
-  defp do_cut_log(prices, length, memo) do
-    Map.get_lazy(memo, length, fn ->
-      {price, _memo} =
-        Enum.reduce(1..length, {0, memo}, fn cut_length, {max_price, memo} ->
-          cut_length_price = Map.get(prices, cut_length, 0)
-          max_remainder_price = do_cut_log(prices, length - cut_length, memo)
-          price = max(max_price, cut_length_price + max_remainder_price)
-          {price, Map.put(memo, length, price)}
+  def do_cut_log(prices, length, memo) do
+    case memo[length] do
+      nil ->
+        Enum.reduce(1..length, {0, memo}, fn cut_length, {max_value, memo} ->
+          {remainder_value, memo} = do_cut_log(prices, length - cut_length, memo)
+          value = max(max_value, Map.get(prices, cut_length, 0) + remainder_value)
+          {value, Map.put(memo, length, value)}
         end)
 
-      price
-    end)
+      value ->
+        {value, memo}
+    end
   end
 end

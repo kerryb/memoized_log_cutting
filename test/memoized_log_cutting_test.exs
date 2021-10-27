@@ -22,7 +22,7 @@ defmodule MemoizedLogCuttingTest do
 
     test "returns the result for long logs in an acceptable amount of time" do
       Task.async(fn -> MemoizedLogCutting.cut_log(@p, 50) end)
-      |> Task.await(:timer.seconds(6))
+      |> Task.await(:timer.seconds(1))
     end
   end
 end
